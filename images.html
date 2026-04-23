@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memories</title>
+
+<script>
+if (localStorage.getItem("verifiedJunwei") !== "true") {
+    window.location.href = "index.html";
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg, #ffe6f0, #fff0f5);
+}
+
+/* NAV */
+.nav {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:15px;
+  position:sticky;
+  top:0;
+  background:rgba(255,255,255,0.65);
+  backdrop-filter:blur(10px);
+  z-index:10;
+}
+
+.nav a {
+  text-decoration:none;
+  background:rgba(255,105,135,0.85);
+  color:white;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:13px;
+}
+
+/* HEADER PANEL */
+.header {
+  max-width: 420px;
+  margin: 15px auto 0;
+  padding: 12px;
+  background: rgba(255,255,255,0.75);
+  border-radius: 14px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+.header h3 {
+  margin: 0;
+  color: #ff4d6d;
+  font-size: 15px;
+}
+
+.header input {
+  margin-top:8px;
+  width:100%;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid #eee;
+}
+
+/* FEED */
+.feed {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+  padding:20px;
+}
+
+/* POST */
+.post {
+  width:100%;
+  max-width:420px;
+  background:rgba(255,255,255,0.9);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  transition:0.2s;
+}
+
+.post:hover {
+  transform: translateY(-4px);
+}
+
+/* IMAGE */
+.post img {
+  width:100%;
+}
+
+/* HEADER */
+.post-header {
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  font-size:13px;
+  font-weight:600;
+  color:#ff4d6d;
+}
+
+/* BODY */
+.post-body {
+  padding:10px;
+}
+
+.caption {
+  font-size:14px;
+  font-weight:600;
+  color:#ff4d6d;
+}
+
+.date {
+  font-size:11px;
+  color:#999;
+  margin-top:4px;
+}
+
+/* ACTIONS */
+.actions {
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  border-top:1px solid rgba(0,0,0,0.05);
+}
+
+.actions button {
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:13px;
+  color:#ff6b8a;
+}
+
+/* LIKE */
+.liked {
+  color:red;
+  font-weight:700;
+}
+
+/* EMPTY */
+.empty {
+  margin-top:50px;
+  color:#ff6b8a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <a href="home.html">home</a>
+  <a href="images.html">images</a>
+  <a href="question.html">question</a>
+</div>
+
+<!-- DASHBOARD HEADER -->
+<div class="header">
+  <h3 id="count">memories: 0</h3>
+  <input type="text" id="search" placeholder="search memories...">
+</div>
+
+<div class="feed" id="feed"></div>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("drawings") || "[]");
+const feed = document.getElementById("feed");
+const search = document.getElementById("search");
+
+/* LIKE STORAGE */
+let likes = JSON.parse(localStorage.getItem("likes") || "{}");
+
+function saveLikes(){
+  localStorage.setItem("likes", JSON.stringify(likes));
+}
+
+/* RENDER */
+function render(filter="") {
+  feed.innerHTML = "";
+
+  let filtered = data.filter(item =>
+    item.caption.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  document.getElementById("count").textContent =
+    `memories: ${filtered.length}`;
+
+  if (filtered.length === 0) {
+    feed.innerHTML = `<p class="empty">no memories yet 🥺</p>`;
+    return;
+  }
+
+  filtered.forEach((item, index) => {
+
+    const id = item.date;
+
+    const post = document.createElement("div");
+    post.className = "post";
+
+    post.innerHTML = `
+      <div class="post-header">
+        💗 memory
+        <span>${likes[id] ? "❤️ liked" : ""}</span>
+      </div>
+
+      <img src="${item.image}">
+
+      <div class="post-body">
+        <div class="caption">${item.caption}</div>
+        <div class="date">${item.date}</div>
+      </div>
+
+      <div class="actions">
+        <button class="like">${likes[id] ? "❤️ unlike" : "🤍 like"}</button>
+        <button class="download">💾 save</button>
+        <button class="delete">🗑 delete</button>
+      </div>
+    `;
+
+    /* LIKE */
+    post.querySelector(".like").onclick = () => {
+      likes[id] = !likes[id];
+      saveLikes();
+      render(search.value);
+    };
+
+    /* DOWNLOAD */
+    post.querySelector(".download").onclick = () => {
+      const a = document.createElement("a");
+      a.href = item.image;
+      a.download = "memory.png";
+      a.click();
+    };
+
+    /* DELETE */
+    post.querySelector(".delete").onclick = () => {
+      data.splice(index, 1);
+      localStorage.setItem("drawings", JSON.stringify(data));
+      render(search.value);
+    };
+
+    feed.appendChild(post);
+  });
+}
+
+/* SEARCH */
+search.addEventListener("input", () => {
+  render(search.value);
+});
+
+render();
+
+</script>
+
+</body>
+</html>

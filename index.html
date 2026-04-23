@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg, #fff5f8, #ffeef7, #fdf2f9);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: #ff758f;
+  padding: 20px;
+}
+
+.container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ENVELOPE */
+#envelope {
+  width: min(180px, 45vw);
+  height: calc(min(180px, 45vw) * 0.66);
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 25px;
+  transition: 0.3s ease;
+}
+
+#envelope:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 12px rgba(255, 133, 161, 0.4));
+}
+
+.envelope-body {
+  width: 100%;
+  height: 100%;
+  background: #ffd6e0;
+  border-radius: 12px;
+  position: absolute;
+  bottom: 0;
+}
+
+.envelope-flap {
+  width: 100%;
+  height: 60%;
+  background: #ffb3c1;
+  position: absolute;
+  top: 0;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform-origin: top;
+  transition: transform 0.7s ease;
+}
+
+.envelope-letter {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 35%;
+  font-size: clamp(20px, 5vw, 28px);
+  transition: 0.7s ease;
+}
+
+.open .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+.open .envelope-letter {
+  transform: translateY(-60px);
+  opacity: 0;
+}
+
+/* LOGIN BOX */
+.box {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(15px);
+  padding: 40px 25px;
+  border-radius: 30px;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  display: none;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.box.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+h2 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+input {
+  padding: 12px;
+  width: 100%;
+  border-radius: 15px;
+  border: 1px solid #fce4ec;
+  background: rgba(255, 255, 255, 0.8);
+  margin-top: 10px;
+  text-align: center;
+  outline: none;
+  color: #ff758f;
+  font-family: inherit;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 30px;
+  border: none;
+  background: #ff85a1;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  width: 100%;
+}
+
+button:hover {
+  background: #ff758f;
+  transform: scale(1.03);
+}
+
+/* UTILITY */
+.hidden {
+  opacity: 0 !important;
+  transform: scale(0.95) !important;
+  pointer-events: none;
+}
+
+#msg {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #ff4d6d;
+}
+
+/* SCAN SCREEN */
+#scanScreen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fffafa;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  padding: 20px;
+  text-align: center;
+}
+
+.bar-container {
+  width: min(220px, 70vw);
+  background: #ffe5ec;
+  border-radius: 10px;
+  height: 6px;
+  margin-top: 20px;
+}
+
+#bar {
+  width: 0%;
+  height: 100%;
+  background: #ff85a1;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+/* RESPONSIVE BREAKPOINTS */
+@media (max-width: 480px) {
+  .box {
+    padding: 30px 20px;
+    border-radius: 22px;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+  }
+
+  button {
+    padding: 10px 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div id="envelope" onclick="openEnvelope()">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body"></div>
+        <div class="envelope-letter">💌</div>
+    </div>
+
+    <div id="introText"> >_< </div>
+
+    <div class="box" id="loginBox">
+      <h2>are you the real 俊瑋?</h2>
+      <input type="text" id="answer" placeholder="MM/DD/YYYY" maxlength="10" oninput="formatDate(this)">
+      <button onclick="checkAnswer()">enter</button>
+      <p id="msg"></p>
+    </div>
+</div>
+
+<div id="scanScreen">
+  <div id="scanText" style="color:#ff758f;">initializing system...</div>
+  <div class="bar-container">
+    <div id="bar"></div>
+  </div>
+</div>
+
+<script>
+window.onload = () => {
+    if (sessionStorage.getItem("verified") === "true") {
+        window.location.href = "home.html";
+    }
+};
+
+function openEnvelope() {
+    const env = document.getElementById("envelope");
+    const text = document.getElementById("introText");
+
+    env.classList.add("open");
+
+    setTimeout(() => {
+        text.textContent = "when did we first meet?";
+    }, 1500);
+
+    setTimeout(() => {
+        revealQuestion();
+    }, 1500);
+}
+
+function revealQuestion() {
+    const box = document.getElementById("loginBox");
+    const intro = document.getElementById("introText");
+
+    intro.classList.add("hidden");
+
+    setTimeout(() => {
+        intro.style.display = "none";
+        document.getElementById("envelope").style.display = "none";
+        box.style.display = "block";
+        setTimeout(() => box.classList.add("show"), 50);
+    }, 600);
+}
+
+function formatDate(input) {
+  let value = input.value.replace(/\D/g, "");
+  if (value.length > 2) value = value.slice(0,2) + "/" + value.slice(2);
+  if (value.length > 5) value = value.slice(0,5) + "/" + value.slice(5,9);
+  input.value = value;
+}
+
+function checkAnswer() {
+  const input = document.getElementById("answer").value;
+  const msg = document.getElementById("msg");
+  const box = document.getElementById("loginBox");
+  const validAnswers = ["10/25/2025", "10/25/25"];
+
+  if (validAnswers.includes(input)) {
+    msg.textContent = "if so...";
+    setTimeout(() => {
+      box.classList.add("hidden");
+      setTimeout(() => {
+        box.style.display = "none";
+        runScan();
+      }, 800);
+    }, 1500);
+  } else {
+    msg.textContent = "eh u dont remember? 😾";
+  }
+}
+
+function runScan() {
+  const scanScreen = document.getElementById("scanScreen");
+  const scanText = document.getElementById("scanText");
+  const bar = document.getElementById("bar");
+  scanScreen.style.display = "flex";
+
+  const steps = ["matching biometrics...", "verifying history...", "accessing core...", "verified: 俊瑋", "welcome home"];
+  let i = 0, progress = 0;
+
+  const interval = setInterval(() => {
+    scanText.textContent = steps[i];
+    progress += 20;
+    bar.style.width = progress + "%";
+    i++;
+    if (i >= steps.length) {
+      clearInterval(interval);
+      setTimeout(() => {
+        sessionStorage.setItem("verified", "true");
+        window.location.href = "home.html";
+      }, 800);
+    }
+  }, 700);
+}
+</script>
+
+</body>
+</html>

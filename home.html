@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home</title>
+
+<script>
+if (localStorage.getItem("verifiedJunwei") !== "true") {
+    window.location.href = "index.html";
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg1:#ffe6f0;
+  --bg2:#fff7fb;
+  --card:rgba(255,255,255,0.72);
+  --accent:#ff4d6d;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  padding:16px;
+  font-family:'Quicksand',sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+}
+
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+
+.nav a{
+  text-decoration:none;
+  background:rgba(255,105,135,0.9);
+  color:white;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:13px;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:14px;
+}
+
+.box{
+  background:var(--card);
+  backdrop-filter:blur(16px);
+  border-radius:18px;
+  padding:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.06);
+  overflow:hidden;
+}
+
+.full{grid-column:1/-1;}
+
+.title{
+  text-align:center;
+  font-weight:600;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.hero img{
+  width:100%;
+  max-height:280px;
+  object-fit:cover;
+  border-radius:16px;
+}
+
+.polaroid{
+  background:white;
+  padding:12px;
+  border-radius:10px;
+  box-shadow:0 12px 25px rgba(0,0,0,0.12);
+}
+
+.polaroid img{
+  width:100%;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  border-radius:6px;
+}
+
+.caption{
+  text-align:center;
+  margin-top:8px;
+  font-size:13px;
+  color:#666;
+  font-weight:600;
+}
+
+canvas{
+  width:100%;
+  aspect-ratio:4/3;
+  background:white;
+  border-radius:14px;
+  border:1px solid rgba(255,182,193,0.35);
+}
+
+.controls{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+.songs{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.song-title{
+  text-align:center;
+  font-weight:600;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.cassette-line{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.cassette-mini img{
+  width:120px;
+  height:70px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+.cassette-mini div{
+  margin-top:6px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--accent);
+}
+
+.footer-timer{
+  margin-top:18px;
+  padding:16px;
+  background:rgba(255,255,255,0.65);
+  border-radius:18px;
+  text-align:center;
+}
+
+.timer-grid{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.time-box{
+  background:white;
+  padding:10px;
+  border-radius:12px;
+  min-width:70px;
+}
+
+.time-value{
+  font-size:14px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+.time-label{
+  font-size:11px;
+  color:#777;
+}
+
+@media (max-width:900px){
+  .container{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <a href="home.html">home</a>
+  <a href="images.html">images</a>
+  <a href="question.html">♡</a>
+</div>
+
+<div class="container">
+
+  <div class="box full hero">
+    <img src="Studio Ghibli.gif">
+  </div>
+
+  <div class="box">
+    <div class="title">my weiii</div>
+    <div class="polaroid">
+      <img src="wei.jpg">
+      <div class="caption">greedy wei ♡</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="title">wei's doodle space</div>
+    <canvas id="canvas"></canvas>
+
+    <div class="controls">
+      <input type="color" id="color" value="#ff6b8a">
+      <input type="range" id="size" min="1" max="10" value="2">
+      <button>pen</button>
+      <button>eraser</button>
+      <button>clear</button>
+      <button>save</button>
+    </div>
+  </div>
+
+  <div class="box songs full">
+    <div class="song-title">songs that reminds me of him</div>
+    <div class="cassette-line">
+      <a class="cassette-mini" href="https://youtu.be/SSTp0rknOgA">
+        <img src="https://img.youtube.com/vi/SSTp0rknOgA/hqdefault.jpg">
+        <div>ilysb</div>
+      </a>
+      <a class="cassette-mini" href="https://youtu.be/M7R7-qnTsFw">
+        <img src="https://img.youtube.com/vi/M7R7-qnTsFw/hqdefault.jpg">
+        <div>seasons</div>
+      </a>
+      <a class="cassette-mini" href="https://youtu.be/L215z9C4Zd8">
+        <img src="https://img.youtube.com/vi/L215z9C4Zd8/hqdefault.jpg">
+        <div>dilaw</div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-timer">
+  <div class="title">we've known each other for</div>
+  <div class="timer-grid">
+    <div class="time-box"><div id="y"></div><div>years</div></div>
+    <div class="time-box"><div id="mo"></div><div>months</div></div>
+    <div class="time-box"><div id="d"></div><div>days</div></div>
+    <div class="time-box"><div id="h"></div><div>hours</div></div>
+  </div>
+</div>
+
+<script>
+// TIMER
+const startDate=new Date("2025-10-25T00:00:00");
+setInterval(()=>{
+  const now=new Date();
+  let diff=(now-startDate)/1000;
+  y.textContent=Math.floor(diff/31536000);
+  mo.textContent=Math.floor((diff%31536000)/2592000);
+  d.textContent=Math.floor((diff%2592000)/86400);
+  h.textContent=Math.floor((diff%86400)/3600);
+},1000);
+
+// DOODLE
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+  canvas.width=canvas.offsetWidth;
+  canvas.height=canvas.offsetHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+let drawing=false;
+let mode="pen";
+
+const color=document.getElementById("color");
+const size=document.getElementById("size");
+const buttons=document.querySelectorAll(".controls button");
+
+function start(e){
+  drawing=true;
+  ctx.beginPath();
+  draw(e);
+}
+function end(){drawing=false;}
+
+function draw(e){
+  if(!drawing)return;
+
+  const rect=canvas.getBoundingClientRect();
+  const x=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
+  const y=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
+
+  ctx.lineWidth=size.value;
+  ctx.lineCap="round";
+  ctx.strokeStyle=(mode==="eraser")?"#fff":color.value;
+
+  ctx.lineTo(x,y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x,y);
+}
+
+canvas.addEventListener("mousedown",start);
+canvas.addEventListener("mouseup",end);
+canvas.addEventListener("mouseleave",end);
+canvas.addEventListener("mousemove",draw);
+
+canvas.addEventListener("touchstart",start);
+canvas.addEventListener("touchend",end);
+canvas.addEventListener("touchmove",draw);
+
+buttons[0].onclick=()=>mode="pen";
+buttons[1].onclick=()=>mode="eraser";
+buttons[2].onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
+
+// ⭐ SAVE WITH CAPTION (FIXED)
+buttons[3].onclick = () => {
+  const image = canvas.toDataURL();
+  const caption = prompt("add a caption 💗") || "wei's doodle 💗";
+
+  let drawings = JSON.parse(localStorage.getItem("drawings") || "[]");
+
+  drawings.unshift({
+    image,
+    caption,
+    date: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("drawings", JSON.stringify(drawings));
+
+  const link=document.createElement("a");
+  link.download="doodle.png";
+  link.href=image;
+  link.click();
+};
+</script>
+
+</body>
+</html>
