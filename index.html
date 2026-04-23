@@ -148,7 +148,6 @@ button:hover {
   transform: scale(1.03);
 }
 
-/* UTILITY */
 .hidden {
   opacity: 0 !important;
   transform: scale(0.95) !important;
@@ -161,7 +160,6 @@ button:hover {
   color: #ff4d6d;
 }
 
-/* SCAN SCREEN */
 #scanScreen {
   position: fixed;
   top: 0; left: 0;
@@ -191,22 +189,6 @@ button:hover {
   background: #ff85a1;
   border-radius: 10px;
   transition: width 0.4s ease;
-}
-
-/* RESPONSIVE BREAKPOINTS */
-@media (max-width: 480px) {
-  .box {
-    padding: 30px 20px;
-    border-radius: 22px;
-  }
-
-  h2 {
-    font-size: 1.05rem;
-  }
-
-  button {
-    padding: 10px 20px;
-  }
 }
 </style>
 </head>
@@ -240,6 +222,7 @@ button:hover {
 
 <script>
 window.onload = () => {
+    // FIXED: consistent storage key
     if (sessionStorage.getItem("verified") === "true") {
         window.location.href = "home.html";
     }
@@ -289,13 +272,16 @@ function checkAnswer() {
 
   if (validAnswers.includes(input)) {
     msg.textContent = "if so...";
+
     setTimeout(() => {
       box.classList.add("hidden");
+
       setTimeout(() => {
         box.style.display = "none";
         runScan();
       }, 800);
     }, 1500);
+
   } else {
     msg.textContent = "eh u dont remember? 😾";
   }
@@ -305,9 +291,17 @@ function runScan() {
   const scanScreen = document.getElementById("scanScreen");
   const scanText = document.getElementById("scanText");
   const bar = document.getElementById("bar");
+
   scanScreen.style.display = "flex";
 
-  const steps = ["matching biometrics...", "verifying history...", "accessing core...", "verified: 俊瑋", "welcome home"];
+  const steps = [
+    "matching biometrics...",
+    "verifying history...",
+    "accessing core...",
+    "verified: 俊瑋",
+    "welcome home"
+  ];
+
   let i = 0, progress = 0;
 
   const interval = setInterval(() => {
@@ -315,9 +309,12 @@ function runScan() {
     progress += 20;
     bar.style.width = progress + "%";
     i++;
+
     if (i >= steps.length) {
       clearInterval(interval);
+
       setTimeout(() => {
+        // FIXED: same key as home.html
         sessionStorage.setItem("verified", "true");
         window.location.href = "home.html";
       }, 800);

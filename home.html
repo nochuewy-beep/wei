@@ -6,7 +6,8 @@
 <title>Home</title>
 
 <script>
-if (localStorage.getItem("verifiedJunwei") !== "true") {
+/* FIXED: match index.html storage system */
+if (sessionStorage.getItem("verified") !== "true") {
     window.location.href = "index.html";
 }
 </script>
@@ -30,6 +31,7 @@ body{
   background:linear-gradient(135deg,var(--bg1),var(--bg2));
 }
 
+/* NAV */
 .nav{
   display:flex;
   justify-content:center;
@@ -47,6 +49,7 @@ body{
   font-size:13px;
 }
 
+/* LAYOUT */
 .container{
   max-width:1100px;
   margin:auto;
@@ -73,6 +76,7 @@ body{
   margin-bottom:10px;
 }
 
+/* HERO */
 .hero img{
   width:100%;
   max-height:280px;
@@ -80,6 +84,7 @@ body{
   border-radius:16px;
 }
 
+/* POLAROID */
 .polaroid{
   background:white;
   padding:12px;
@@ -102,6 +107,7 @@ body{
   font-weight:600;
 }
 
+/* CANVAS */
 canvas{
   width:100%;
   aspect-ratio:4/3;
@@ -118,6 +124,7 @@ canvas{
   margin-top:10px;
 }
 
+/* SONGS */
 .songs{
   display:flex;
   flex-direction:column;
@@ -152,6 +159,7 @@ canvas{
   color:var(--accent);
 }
 
+/* TIMER */
 .footer-timer{
   margin-top:18px;
   padding:16px;
@@ -185,6 +193,7 @@ canvas{
   color:#777;
 }
 
+/* RESPONSIVE */
 @media (max-width:900px){
   .container{grid-template-columns:1fr;}
 }
@@ -229,15 +238,18 @@ canvas{
 
   <div class="box songs full">
     <div class="song-title">songs that reminds me of him</div>
+
     <div class="cassette-line">
       <a class="cassette-mini" href="https://youtu.be/SSTp0rknOgA">
         <img src="https://img.youtube.com/vi/SSTp0rknOgA/hqdefault.jpg">
         <div>ilysb</div>
       </a>
+
       <a class="cassette-mini" href="https://youtu.be/M7R7-qnTsFw">
         <img src="https://img.youtube.com/vi/M7R7-qnTsFw/hqdefault.jpg">
         <div>seasons</div>
       </a>
+
       <a class="cassette-mini" href="https://youtu.be/L215z9C4Zd8">
         <img src="https://img.youtube.com/vi/L215z9C4Zd8/hqdefault.jpg">
         <div>dilaw</div>
@@ -260,9 +272,11 @@ canvas{
 <script>
 // TIMER
 const startDate=new Date("2025-10-25T00:00:00");
+
 setInterval(()=>{
   const now=new Date();
   let diff=(now-startDate)/1000;
+
   y.textContent=Math.floor(diff/31536000);
   mo.textContent=Math.floor((diff%31536000)/2592000);
   d.textContent=Math.floor((diff%2592000)/86400);
@@ -292,6 +306,7 @@ function start(e){
   ctx.beginPath();
   draw(e);
 }
+
 function end(){drawing=false;}
 
 function draw(e){
@@ -324,21 +339,8 @@ buttons[0].onclick=()=>mode="pen";
 buttons[1].onclick=()=>mode="eraser";
 buttons[2].onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 
-// ⭐ SAVE WITH CAPTION (FIXED)
-buttons[3].onclick = () => {
-  const image = canvas.toDataURL();
-  const caption = prompt("add a caption 💗") || "wei's doodle 💗";
-
-  let drawings = JSON.parse(localStorage.getItem("drawings") || "[]");
-
-  drawings.unshift({
-    image,
-    caption,
-    date: new Date().toLocaleString()
-  });
-
-  localStorage.setItem("drawings", JSON.stringify(drawings));
-
+buttons[3].onclick=()=>{
+  const image=canvas.toDataURL();
   const link=document.createElement("a");
   link.download="doodle.png";
   link.href=image;
